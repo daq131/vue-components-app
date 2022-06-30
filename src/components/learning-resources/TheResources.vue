@@ -1,7 +1,11 @@
 <template>
     <base-card>
-        <base-button @click="setSelectedTab('stored-resources')">Stored resources</base-button>
-        <base-button @click="setSelectedTab('add-resource')">Add resource</base-button>
+        <base-button @click="setSelectedTab('stored-resources')" 
+        :mode="storedResButtonMode">
+        Stored resources</base-button>
+        <base-button @click="setSelectedTab('add-resource')"
+        :mode="addResButtonMode">
+        Add resource</base-button>
     </base-card>
     <component :is="selectedTab">
     </component>
@@ -10,15 +14,33 @@
 <script>
 
 import StoredResources from './StoredResources.vue'
-import AddResorce from './AddResorce.vue';
+import AddResource from './AddResource.vue';
 export default {
     components: {
         StoredResources,
-        AddResorce 
+        AddResource 
     },
     data() {
         return {
-            selectedTab: 'stored-resoorces'
+            selectedTab: 'stored-resources',
+            storedResources: [
+                { id: 'official-guide', title: 'Official Guide', description: 'The official Vue decumentation.', link: 'https://vuejs.org'},
+                { id: 'google', title: 'Google', description: 'Learn google...', link: 'https://google.com'}
+            ]
+        }
+    },
+    // provide resources to all child components, we need to inject them in storedResources component
+    provide() {
+        return {
+        resources: this.storedResources
+        }
+    },
+    computed: {
+        addResButtonMode() {
+           return this.selectedTab === 'add-resource' ? null : 'flat';
+        },
+        storedResButtonMode() {
+            return this.selectedTab === 'stored-resources' ? null : 'flat';
         }
     },
     methods: {
